@@ -9,3 +9,5 @@ Environmental Science
 ## Machine Learning Techniques: 
 - Image analysis
 - Ensemble methods
+
+[Download My Document](Biweekly_Report_2-9.docx)
