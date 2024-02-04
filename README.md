@@ -10,4 +10,4 @@ Environmental Science
 - Image analysis
 - Ensemble methods
 
-[Download My Document](Biweekly_Report_2-9.docx)
+[Biweekly-Report 2-9](Biweekly_Report_2-9.docx)
