@@ -1,4 +1,4 @@
-# College-Dropouts
+# College Dropouts
 STOR 565 Final Project Group
 
 *Team members: Claudia Dare, Cora McAnulty, Kayla Casey, Josh Carlson*
