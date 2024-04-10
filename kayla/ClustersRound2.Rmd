@@ -1,0 +1,69 @@
+---
+title: "ClusteringAttempt1"
+output: html_document
+date: "2024-04-07"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(naniar)
+library(stats)
+```
+
+
+```{r}
+carbondat = read_csv("/Users/coramcanulty/Desktop/ML group project data/NFA 2018 Edition.csv")
+
+carbondat %>% 
+  filter(record == "AreaPerCap", carbon !=0 , carbon != "NULL")
+carbondat %>% 
+  filter(record == "AreaTotHA", carbon !=0 , carbon != "NULL")
+carbondat %>% 
+  filter(record == "BiocapPerCap", carbon !=0 , carbon != "NULL")
+carbondat %>% 
+  filter(record == "BiocapTotGHA", carbon !=0 , carbon != "NULL")
+
+```
+
+```{r}
+carbondat.2 = carbondat %>% replace_with_na(replace = list(carbon = "NULL", crop_land = "NULL", grazing_land = "NULL", forest_land = "NULL", fishing_ground = "NULL", built_up_land = "NULL"))
+
+
+carbondat.wide = carbondat.2 %>%
+  gather(variable, value, 5:12) %>%
+  unite(temp, record, variable) %>%
+  spread(temp, value) %>%
+  select(-"AreaPerCap_carbon", -"AreaTotHA_carbon", "BiocapPerCap_carbon", -"BiocapTotGHA_carbon")
+
+carbondat.wide.QA = carbondat.wide %>%
+  select("country", "year", "country_code", "AreaPerCap_QScore", "AreaTotHA_QScore", "BiocapPerCap_QScore", "BiocapTotGHA_QScore", "EFConsPerCap_QScore", "EFConsTotGHA_QScore", "EFProdTotGHA_QScore", "EFProdPerCap_QScore")
+
+carbondat.wide.noQA = carbondat.wide %>%
+  select(-"AreaPerCap_QScore", -"AreaTotHA_QScore", -"BiocapPerCap_QScore", -"BiocapTotGHA_QScore", -"EFConsPerCap_QScore", -"EFConsTotGHA_QScore", -"EFProdTotGHA_QScore", -"EFProdPerCap_QScore")
+```
+
+```{r}
+kmeans_k3 = kmeans(na.omit(carbondat.wide.noQA[4:56]), center = 3 )
+clusters_k3 = kmeans_k3$cluster
+
+kmeans_k4 = kmeans(na.omit(carbondat.wide.noQA[4:56]), center = 4 )
+clusters_k4 = kmeans_k4$cluster
+
+kmeans_k5 = kmeans(na.omit(carbondat.wide.noQA[4:56]), center = 5 )
+clusters_k5 = kmeans_k5$cluster
+
+use = as.data.frame(lapply(na.omit(carbondat.wide.noQA[4:56]), as.numeric))
+pca = prcomp(use,scale=F)$x[,1:2]
+
+pcaclust = cbind(pca, clusters_k4)
+plot(pcaclust, main="PCA", col=clusters_k4)
+
+```
+
+
+
+
