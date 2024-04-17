@@ -150,3 +150,93 @@ clustcountry.3 %>%
 
 ```
 
+```{r only-2014-5-clusters}
+
+carbondat.wide.noQA.2014 = carbondat.wide.noQA %>% filter(year==2014)
+
+
+kmeans_k5.2 = kmeans(na.omit(carbondat.wide.noQA.2014[4:56]), center = 5 )
+clusters_k5.2 = kmeans_k5.2$cluster
+clustcountry.5 = na.omit(carbondat.wide.noQA.2014) %>% .[1:4]
+clustcountry.5$clusters = clusters_k5.2
+
+pcaclust.5 = cbind(pca2, clusters_k5.2)
+plot(pcaclust.5, main="PCA", col=clusters_k5.2)
+
+
+clustcountry.5 %>%
+  filter(clusters == 5) %>%
+  .$country %>%
+  unique(.)
+
+clustcountry.5 %>%
+  filter(clusters == 4) %>%
+  .$country %>%
+  unique(.)
+
+clustcountry.5 %>%
+  filter(clusters == 3) %>%
+  .$country %>%
+  unique(.)
+
+clustcountry.5 %>%
+  filter(clusters == 2) %>%
+  .$country %>%
+  unique(.)
+
+clustcountry.5 %>%
+  filter(clusters == 1) %>%
+  .$country %>%
+  unique(.)
+
+```
+
+```{r ALL GROUPS }
+
+k_means_allyears_k2.group1 = clustcountry %>%
+  filter(clusters == 1) %>%
+  .$country %>%
+  unique(.)
+
+k_means_allyears_k2.group2 = clustcountry %>%
+  filter(clusters == 2) %>%
+  .$country %>%
+  unique(.)
+
+k_means_2014_k3.group1 =clustcountry.3 %>%
+  filter(clusters == 1) %>%
+  .$country %>%
+  unique(.)
+k_means_2014_k3.group2 =clustcountry.3 %>%
+  filter(clusters == 2) %>%
+  .$country %>%
+  unique(.)
+k_means_2014_k3.group3 =clustcountry.3 %>%
+  filter(clusters == 3) %>%
+  .$country %>%
+  unique(.)
+
+k_means_2014_k5.group1 = clustcountry.5 %>%
+  filter(clusters == 1) %>%
+  .$country %>%
+  unique(.)
+k_means_2014_k5.group2 =clustcountry.5 %>%
+  filter(clusters == 2) %>%
+  .$country %>%
+  unique(.)
+k_means_2014_k5.group3 = clustcountry.5 %>%
+  filter(clusters == 3) %>%
+  .$country %>%
+  unique(.)
+k_means_2014_k5.group4 = clustcountry.5 %>%
+  filter(clusters == 4) %>%
+  .$country %>%
+  unique(.)
+k_means_2014_k5.group5 = clustcountry.5 %>%
+  filter(clusters == 5) %>%
+  .$country %>%
+  unique(.)
+
+```
+
+
