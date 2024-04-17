@@ -16,22 +16,29 @@ library(stats)
 
 
 ```{r}
-carbondat = read_csv("/Users/coramcanulty/Desktop/ML group project data/NFA 2018 Edition.csv")
+carbondat1 = read_csv("/Users/coramcanulty/Desktop/ML group project data/NFA 2018 Edition.csv")
 
-carbondat %>% 
+carbondat1 %>% 
   filter(record == "AreaPerCap", carbon !=0 , carbon != "NULL")
-carbondat %>% 
+carbondat1 %>% 
   filter(record == "AreaTotHA", carbon !=0 , carbon != "NULL")
-carbondat %>% 
+carbondat1 %>% 
   filter(record == "BiocapPerCap", carbon !=0 , carbon != "NULL")
-carbondat %>% 
+carbondat1 %>% 
   filter(record == "BiocapTotGHA", carbon !=0 , carbon != "NULL")
+
+carbondat = carbondat1 %>%
+  filter(country != "World")
 
 ```
 
-```{r}
+```{r looking-at-gha}
 carbondat.2 = carbondat %>% replace_with_na(replace = list(carbon = "NULL", crop_land = "NULL", grazing_land = "NULL", forest_land = "NULL", fishing_ground = "NULL", built_up_land = "NULL"))
 
+```
+
+
+```{r}
 
 carbondat.wide = carbondat.2 %>%
   gather(variable, value, 5:12) %>%
@@ -47,8 +54,20 @@ carbondat.wide.noQA = carbondat.wide %>%
 ```
 
 ```{r}
-kmeans_k3 = kmeans(na.omit(carbondat.wide.noQA[4:56]), center = 3 )
-clusters_k3 = kmeans_k3$cluster
+carbondat.wide.noQA.PerCap = carbondat.wide.noQA %>% 
+  select(1:3,contains("PerCap"))
+carbondat.wide.noQA.GHA = carbondat.wide.noQA %>% 
+  select(-contains("PerCap"))
+```
+
+```{r}
+set.seed(336)
+
+kmeans_k2 = kmeans(na.omit(carbondat.wide.noQA[4:56]), center = 2 )
+clusters_k2 = kmeans_k2$cluster
+clustcountry = na.omit(carbondat.wide.noQA) %>% .[1:4]
+clustcountry$clusters = clusters_k2
+
 
 kmeans_k4 = kmeans(na.omit(carbondat.wide.noQA[4:56]), center = 4 )
 clusters_k4 = kmeans_k4$cluster
@@ -59,11 +78,75 @@ clusters_k5 = kmeans_k5$cluster
 use = as.data.frame(lapply(na.omit(carbondat.wide.noQA[4:56]), as.numeric))
 pca = prcomp(use,scale=F)$x[,1:2]
 
+### got an error in scaling data
+
+pcaclust = cbind(pca, clusters_k2)
+plot(pcaclust, main="PCA", col=clusters_k2)
+
 pcaclust = cbind(pca, clusters_k4)
 plot(pcaclust, main="PCA", col=clusters_k4)
 
+###
+
+use2 = as.data.frame(lapply(na.omit(carbondat.wide.noQA.PerCap[4:30]), as.numeric))
+pca2 = prcomp(use2,scale=F)$x[,1:2]
+pcaclust2 = cbind(pca2, clusters_k3)
+
+plot(pcaclust2, main="PCA", col=clusters_k3)
+
+use3 = as.data.frame(lapply(na.omit(carbondat.wide.noQA.GHA[4:29]), as.numeric))
+pca3 = prcomp(use3,scale=T)$x[,1:2]
+pcaclust3 = cbind(pca3, clusters_k3)
+
+plot(pcaclust3, main="PCA", col=clusters_k3)
+
+## try hierarchical clustering
+### time series with cluster
+
 ```
 
+```{r}
+clustcountry %>%
+  filter(clusters == 2) %>%
+  .$country %>%
+  unique(.)
+
+clustcountry %>%
+  filter(clusters == 1) %>%
+  .$country %>%
+  unique(.)
+```
+
+```{r only-2014-3-clusters}
+
+carbondat.wide.noQA.2014 = carbondat.wide.noQA %>% filter(year==2014)
 
 
+kmeans_k3 = kmeans(na.omit(carbondat.wide.noQA.2014[4:56]), center = 3 )
+clusters_k3 = kmeans_k3$cluster
+clustcountry.3 = na.omit(carbondat.wide.noQA.2014) %>% .[1:4]
+clustcountry.3$clusters = clusters_k3
+
+use2 = as.data.frame(lapply(na.omit(carbondat.wide.noQA.2014[4:56]), as.numeric))
+pca2 = prcomp(use,scale=F)$x[,1:2]
+
+pcaclust.3 = cbind(pca2, clusters_k3)
+plot(pcaclust.3, main="PCA", col=clusters_k3)
+
+clustcountry.3 %>%
+  filter(clusters == 3) %>%
+  .$country %>%
+  unique(.)
+
+clustcountry.3 %>%
+  filter(clusters == 2) %>%
+  .$country %>%
+  unique(.)
+
+clustcountry.3 %>%
+  filter(clusters == 1) %>%
+  .$country %>%
+  unique(.)
+
+```
 
