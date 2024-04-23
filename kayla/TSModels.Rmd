@@ -1,0 +1,537 @@
+---
+title: "TSModels"
+author: "Kayla Casey"
+date: "2024-04-22"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Time Series Work
+
+```{r}
+library(itsmr)
+```
+
+
+1. Time Series by World
+```{r}
+FAOSTAT_World_Month = read.csv("FAOSTAT_tempchg_world_month.csv")
+head(FAOSTAT_World_Year)
+all_months <- month.name
+all_years <- 1961:2023
+FAOSTAT_World_Month$Months <- factor(FAOSTAT_World_Month$Months, levels = all_months)
+FAOSTAT_World_Month <- FAOSTAT_World_Month[order(FAOSTAT_World_Month$Year, as.integer(FAOSTAT_World_Month$Months)),]
+print(FAOSTAT_World_Month)
+FAOSTAT_World_Month_tsm = FAOSTAT_World_Month[,"Value"]
+FAOSTAT_World_Month_tsm
+```
+
+```{r}
+plotc(FAOSTAT_World_Month_tsm)
+acf(FAOSTAT_World_Year_tsm, lag.max=40, type="correlation", plot=TRUE)
+```
+
+
+```{r}
+xv = c("season", 12, "trend", 2)
+e = Resid(FAOSTAT_World_Month_tsm, xv)
+#autofit(e)
+plotc(e)
+acf(e, lag.max=40, type="correlation", plot=TRUE)
+test(e)
+```
+
+```{r}
+a = arma(e, 1, 1)
+f = Resid(FAOSTAT_World_Month_tsm, xv, a)
+test(f)
+acf(f, lag.max=40, type="correlation", plot=TRUE)
+```
+
+```{r}
+plotc(f)
+```
+
+```{r}
+world_forecast =forecast(FAOSTAT_World_Month_tsm, xv, a, h=24, opt=2)
+world_forecast
+```
+
+```{r}
+training_data <- FAOSTAT_World_Month_tsm[1:696]
+test_data <- FAOSTAT_World_Month_tsm[697:756]
+
+xv_train = c("season", 12, "trend", 2)
+e_train = Resid(training_data, xv)
+#auto = autofit(e_train)
+model = arma(e_train, 1, 1)
+
+forecast_next_5_years <- forecast(training_data, xv_train, model, h=60, opt=2)
+plot(test_data, type = "l", col = "red", ylim = range(c(test_data, forecast_next_5_years$pred)), 
+     xlab = "Months", ylab = "Temperature Change", main = "Forecast vs Actual Whole World by Month")
+lines(forecast_next_5_years$pred, col = "blue")
+legend("topright", legend = c("Actual", "Forecast"), col = c("red", "blue"), lty = 1)
+```
+
+
+
+
+
+
+
+
+```{r}
+FAOSTAT_World_Year = read.csv("FAOSTAT_tempchg_world_year.csv")
+FAOSTAT_World_Year = FAOSTAT_World_Year[,"Value"]
+FAOSTAT_World_Year
+```
+
+```{r}
+plotc(FAOSTAT_World_Year)
+acf(FAOSTAT_World_Year, lag.max=40, type="correlation", plot=TRUE)
+```
+
+```{r}
+xv2 = c("season",1,"trend", 2)
+e2 = Resid(FAOSTAT_World_Year, xv2)
+autofit(e2)
+plotc(e2)
+acf(e2, lag.max=40, type="correlation", plot=TRUE)
+test(e2)
+```
+```{r}
+a2 = arma(e2, 4, 3)
+f2 = Resid(FAOSTAT_World_Year, xv2, a2)
+test(f2)
+```
+```{r}
+plotc(f2)
+```
+
+
+```{r}
+forecast(FAOSTAT_World_Year, xv2, a2, h=5, opt=2)
+```
+
+```{r}
+training_data <- FAOSTAT_World_Year[1:58]
+test_data <- FAOSTAT_World_Year[58:63]
+
+xv_train = c("season", 1, "trend", 2)
+e_train = Resid(training_data, xv)
+#autofit(e_train)
+model = arma(e_train, 4, 3)
+
+forecast_next_5_years <- forecast(training_data, xv_train, model, h=5, opt=2)
+plot(test_data, type = "l", col = "red", ylim = range(c(test_data, forecast_next_5_years$pred)), 
+     xlab = "Months", ylab = "Temperature Change", main = "Forecast vs Actual Whole Year by Year")
+lines(forecast_next_5_years$pred, col = "blue")
+legend("topright", legend = c("Actual", "Forecast"), col = c("red", "blue"), lty = 1)
+```
+
+
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+2. Time Series by Geographic Region
+
+Africa
+
+```{r}
+FAOSTAT_Africa_Month = read.csv("FAOSTAT_tempchg_africa_month.csv")
+head(FAOSTAT_Africa_Month)
+all_months <- month.name
+all_years <- 1961:2023
+FAOSTAT_Africa_Month$Months <- factor(FAOSTAT_Africa_Month$Months, levels = all_months)
+FAOSTAT_Africa_Month <- FAOSTAT_Africa_Month[order(FAOSTAT_Africa_Month$Year, as.integer(FAOSTAT_Africa_Month$Months)),]
+print(FAOSTAT_Africa_Month)
+FAOSTAT_Africa_Month = FAOSTAT_Africa_Month[,"Value"]
+FAOSTAT_Africa_Month
+```
+
+```{r}
+plotc(FAOSTAT_Africa_Month)
+acf(FAOSTAT_Africa_Month, lag.max=40, type="correlation", plot=TRUE)
+```
+
+```{r}
+xv_africa = c("season",12,"trend", 2)
+e_africa = Resid(FAOSTAT_Africa_Month, xv_africa)
+#autofit(e_africa)
+plotc(e_africa)
+acf(e_africa, lag.max=40, type="correlation", plot=TRUE)
+test(e_africa)
+```
+```{r}
+a_africa = arma(e_africa, 5, 5)
+f_africa = Resid(FAOSTAT_Africa_Month, xv_africa, a_africa)
+test(f_africa)
+```
+```{r}
+plotc(f_africa)
+```
+
+
+```{r}
+africa_forecast = forecast(FAOSTAT_Africa_Month, xv_africa, a_africa, h=24, opt=2)
+africa_forecast
+```
+
+
+```{r}
+training_data_africa <- FAOSTAT_Africa_Month[1:696]
+test_data_africa <- FAOSTAT_Africa_Month[697:756]
+
+xv_train_africa = c("season", 12, "trend", 2)
+e_train_africa = Resid(training_data_africa, xv)
+#autofit(e_train_africa)
+train_model_africa = arma(e_train_africa, 5, 5)
+
+forecast_next_5_years_africa <- forecast(training_data_africa, xv_train_africa, train_model_africa, h=60, opt=2)
+plot(test_data_africa, type = "l", col = "red", ylim = range(c(test_data_africa, forecast_next_5_years_africa$pred)), 
+     xlab = "Months", ylab = "Temperature Change", main = "Forecast vs Actual in Africa")
+lines(forecast_next_5_years_africa$pred, col = "blue")
+legend("topright", legend = c("Actual", "Forecast"), col = c("red", "blue"), lty = 1)
+```
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+Asia
+
+```{r}
+FAOSTAT_Asia_Month = read.csv("FAOSTAT_Asia_Month.csv")
+head(FAOSTAT_Asia_Month)
+all_months <- month.name
+all_years <- 1961:2023
+FAOSTAT_Asia_Month$Months <- factor(FAOSTAT_Asia_Month$Months, levels = all_months)
+FAOSTAT_Asia_Month <- FAOSTAT_Asia_Month[order(FAOSTAT_Asia_Month$Year, as.integer(FAOSTAT_Asia_Month$Months)),]
+print(FAOSTAT_Asia_Month)
+FAOSTAT_Asia_Month = FAOSTAT_Asia_Month[,"Value"]
+FAOSTAT_Asia_Month
+```
+
+```{r}
+plotc(FAOSTAT_Asia_Month)
+acf(FAOSTAT_Asia_Month, lag.max=40, type="correlation", plot=TRUE)
+```
+
+```{r}
+xv_asia = c("season",12,"trend", 2)
+e_asia = Resid(FAOSTAT_Asia_Month, xv_asia)
+#autofit(e_asia)
+plotc(e_asia)
+acf(e_asia, lag.max=40, type="correlation", plot=TRUE)
+test(e_asia)
+```
+```{r}
+a_asia = arma(e_asia, 3,5)
+f_asia = Resid(FAOSTAT_Asia_Month, xv_asia, a_asia)
+test(f_asia)
+```
+```{r}
+plotc(f_asia)
+```
+
+
+```{r}
+asia_forecast = forecast(FAOSTAT_Asia_Month, xv_asia, a_asia, h=24, opt=2)
+asia_forecast
+```
+
+
+```{r}
+training_data_asia <- FAOSTAT_Asia_Month[1:696]
+test_data_asia <- FAOSTAT_Asia_Month[697:756]
+
+xv_train_asia = c("season", 12, "trend", 2)
+e_train_asia = Resid(training_data_asia, xv_train_asia)
+#autofit(e_train)
+train_model_asia = arma(e_train, 3, 5)
+
+forecast_next_5_years_asia <- forecast(training_data_asia, xv_train_asia, train_model_asia, h=60, opt=2)
+plot(test_data_asia, type = "l", col = "red", ylim = range(c(test_data_asia, forecast_next_5_years_asia$pred)), 
+     xlab = "Months", ylab = "Temperature Change", main = "Forecast vs Actual in Asia")
+lines(forecast_next_5_years_asia$pred, col = "blue")
+legend("topright", legend = c("Actual", "Forecast"), col = c("red", "blue"), lty = 1)
+```
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+North America
+
+```{r}
+FAOSTAT_NA_Month = read.csv("FAOSTAT_NorthAmerica_Month.csv")
+head(FAOSTAT_NA_Month)
+all_months <- month.name
+all_years <- 1961:2023
+FAOSTAT_NA_Month <- read.csv("FAOSTAT_NorthAmerica_Month.csv")
+all_months <- month.name
+FAOSTAT_NA_Month$Months <- factor(FAOSTAT_NA_Month$Months, levels = all_months)
+FAOSTAT_NA_Month <- FAOSTAT_NA_Month[order(FAOSTAT_NA_Month$Year, as.integer(FAOSTAT_NA_Month$Months)),]
+average_values <- aggregate(Value ~ Year + Months, data = FAOSTAT_NA_Month, FUN = mean)
+average_values = average_values[order(average_values$Year, as.integer(average_values$Months)),]
+FAOSTAT_NA_Month = average_values[,"Value"]
+head(FAOSTAT_NA_Month)
+```
+
+```{r}
+plotc(FAOSTAT_NA_Month)
+acf(FAOSTAT_NA_Month, lag.max=40, type="correlation", plot=TRUE)
+```
+
+```{r}
+xv_na = c("season",12,"trend", 2)
+e_na = Resid(FAOSTAT_NA_Month, xv_na)
+#autofit(e_na)
+plotc(e_na)
+acf(e_na, lag.max=40, type="correlation", plot=TRUE)
+test(e_na)
+```
+```{r}
+a_na = arma(e_na, 2, 5)
+f_na = Resid(FAOSTAT_NA_Month, xv_na, a_na)
+test(f_na)
+```
+```{r}
+plotc(f_na)
+```
+
+
+```{r}
+northamer_forecast = forecast(FAOSTAT_NA_Month, xv_na, a_na, h=24, opt=2)
+northamer_forecast
+```
+
+
+```{r}
+training_data_na <- FAOSTAT_NA_Month[1:696]
+test_data_na <- FAOSTAT_NA_Month[697:756]
+
+xv_train_na = c("season", 12, "trend", 2)
+e_train_na = Resid(training_data_na, xv_train_na)
+#autofit(e_train)
+train_model_na = arma(e_train_na, 2, 5)
+
+forecast_next_5_years_na <- forecast(training_data_na, xv_train_na, train_model_na, h=60, opt=2)
+plot(test_data_na, type = "l", col = "red", ylim = range(c(test_data_na, forecast_next_5_years_na$pred)), 
+     xlab = "Months", ylab = "Temperature Change", main = "Forecast vs Actual in North America")
+lines(forecast_next_5_years_na$pred, col = "blue")
+legend("topright", legend = c("Actual", "Forecast"), col = c("red", "blue"), lty = 1)
+```
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+South America
+
+```{r}
+FAOSTAT_SA_Month = read.csv("FAOSTAT_SouthAmerica_Month.csv")
+head(FAOSTAT_SA_Month)
+all_months <- month.name
+all_years <- 1961:2023
+FAOSTAT_SA_Month$Months <- factor(FAOSTAT_SA_Month$Months, levels = all_months)
+FAOSTAT_SA_Month <- FAOSTAT_SA_Month[order(FAOSTAT_SA_Month$Year, as.integer(FAOSTAT_SA_Month$Months)),]
+print(FAOSTAT_SA_Month)
+FAOSTAT_SA_Month = FAOSTAT_SA_Month[,"Value"]
+FAOSTAT_SA_Month
+```
+
+```{r}
+plotc(FAOSTAT_SA_Month)
+acf(FAOSTAT_SA_Month, lag.max=40, type="correlation", plot=TRUE)
+```
+
+```{r}
+xv_sa = c("season",12,"trend", 2)
+e_sa = Resid(FAOSTAT_SA_Month, xv_sa)
+autofit(e_sa)
+plotc(e_sa)
+acf(e_sa, lag.max=40, type="correlation", plot=TRUE)
+test(e_sa)
+```
+```{r}
+a_sa = arma(e_sa, 5, 5)
+f_sa = Resid(FAOSTAT_SA_Month, xv_sa, a_sa)
+test(f_sa)
+```
+```{r}
+plotc(f_sa)
+```
+
+
+```{r}
+southamer_forecast = forecast(FAOSTAT_SA_Month, xv_sa, a_sa, h=24, opt=2)
+southamer_forecast
+```
+
+
+```{r}
+training_data_sa <- FAOSTAT_SA_Month[1:696]
+test_data_sa <- FAOSTAT_SA_Month[697:756]
+
+xv_train_sa = c("season", 12, "trend", 2)
+e_train_sa = Resid(training_data_sa, xv_sa)
+#autofit(e_train)
+train_model_sa = arma(e_train_sa, 5, 5)
+
+forecast_next_5_years_sa <- forecast(training_data_sa, xv_train_sa, train_model_sa, h=60, opt=2)
+plot(test_data_sa, type = "l", col = "red", ylim = range(c(test_data_sa, forecast_next_5_years_sa$pred)), 
+     xlab = "Months", ylab = "Temperature Change", main = "Forecast vs Actual in South America")
+lines(forecast_next_5_years_sa$pred, col = "blue")
+legend("topright", legend = c("Actual", "Forecast"), col = c("red", "blue"), lty = 1)
+```
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+Europe
+
+```{r}
+FAOSTAT_Europe_Month = read.csv("FAOSTAT_Europe_Month.csv")
+head(FAOSTAT_Europe_Month)
+all_months <- month.name
+all_years <- 1961:2023
+FAOSTAT_Europe_Month$Months <- factor(FAOSTAT_Europe_Month$Months, levels = all_months)
+FAOSTAT_Europe_Month <- FAOSTAT_Europe_Month[order(FAOSTAT_Europe_Month$Year, as.integer(FAOSTAT_Europe_Month$Months)),]
+print(FAOSTAT_Europe_Month)
+FAOSTAT_Europe_Month = FAOSTAT_Europe_Month[,"Value"]
+FAOSTAT_Europe_Month
+```
+
+```{r}
+plotc(FAOSTAT_Europe_Month)
+acf(FAOSTAT_Europe_Month, lag.max=40, type="correlation", plot=TRUE)
+```
+
+```{r}
+xv_europe = c("season",12,"trend", 2)
+e_europe = Resid(FAOSTAT_Europe_Month, xv_europe)
+#autofit(e_europe)
+plotc(e_europe)
+acf(e_europe, lag.max=40, type="correlation", plot=TRUE)
+test(e_europe)
+```
+```{r}
+a_europe = arma(e_europe, 4, 4)
+f_europe = Resid(FAOSTAT_Europe_Month, xv_europe, a_europe)
+test(f_europe)
+```
+```{r}
+plotc(f_europe)
+```
+
+
+```{r}
+europe_forecast = forecast(FAOSTAT_Europe_Month, xv_europe, a_europe, h=24, opt=2)
+europe_forecast
+```
+
+
+```{r}
+training_data_europe <- FAOSTAT_Europe_Month[1:696]
+test_data_europe <- FAOSTAT_Europe_Month[697:756]
+
+xv_train_europe = c("season", 12, "trend", 2)
+e_train_europe = Resid(training_data_europe, xv_europe)
+#autofit(e_train)
+train_model_europe = arma(e_train_europe, 4, 4)
+
+forecast_next_5_years_europe <- forecast(training_data_europe, xv_train_europe, train_model_europe, h=60, opt=2)
+plot(test_data_europe, type = "l", col = "red", ylim = range(c(test_data_europe, forecast_next_5_years_europe$pred)), 
+     xlab = "Months", ylab = "Temperature Change", main = "Forecast vs Actual in Europe")
+lines(forecast_next_5_years_europe$pred, col = "blue")
+legend("topright", legend = c("Actual", "Forecast"), col = c("red", "blue"), lty = 1)
+```
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+Oceania
+
+
+```{r}
+FAOSTAT_Oceania_Month = read.csv("FAOSTAT_Oceania_Month.csv")
+head(FAOSTAT_Oceania_Month)
+all_months <- month.name
+all_years <- 1961:2023
+FAOSTAT_Oceania_Month$Months <- factor(FAOSTAT_Oceania_Month$Months, levels = all_months)
+FAOSTAT_Oceania_Month <- FAOSTAT_Oceania_Month[order(FAOSTAT_Oceania_Month$Year, as.integer(FAOSTAT_Oceania_Month$Months)),]
+print(FAOSTAT_Oceania_Month)
+FAOSTAT_Oceania_Month = FAOSTAT_Oceania_Month[,"Value"]
+FAOSTAT_Oceania_Month
+```
+
+```{r}
+plotc(FAOSTAT_Oceania_Month)
+acf(FAOSTAT_Oceania_Month, lag.max=40, type="correlation", plot=TRUE)
+```
+
+```{r}
+xv_oceania = c("season",12,"trend", 2)
+e_oceania = Resid(FAOSTAT_Oceania_Month, xv_oceania)
+autofit(e_oceania)
+plotc(e_oceania)
+acf(e_oceania, lag.max=40, type="correlation", plot=TRUE)
+test(e_oceania)
+```
+```{r}
+a_oceania = arma(e_oceania, 5, 2)
+f_oceania = Resid(FAOSTAT_Oceania_Month, xv_oceania, a_oceania)
+test(f_oceania)
+```
+```{r}
+plotc(f_oceania)
+```
+
+
+```{r}
+oceania_forecast = forecast(FAOSTAT_Oceania_Month, xv_oceania, a_oceania, h=24, opt=2)
+oceania_forecast
+```
+
+
+```{r}
+training_data_oceania <- FAOSTAT_Oceania_Month[1:696]
+test_data_oceania <- FAOSTAT_Oceania_Month[697:756]
+
+xv_train_oceania = c("season", 12, "trend", 2)
+e_train_oceania = Resid(training_data_oceania, xv_oceania)
+#autofit(e_train)
+train_model_oceania = arma(e_train_oceania, 5, 2)
+
+forecast_next_5_years_oceania <- forecast(training_data_oceania, xv_train_oceania, train_model_oceania, h=60, opt=2)
+plot(test_data_oceania, type = "l", col = "red", ylim = range(c(test_data_oceania, forecast_next_5_years_oceania$pred)), 
+     xlab = "Months", ylab = "Temperature Change", main = "Forecast vs Actual in Oceania")
+lines(forecast_next_5_years_oceania$pred, col = "blue")
+legend("topright", legend = c("Actual", "Forecast"), col = c("red", "blue"), lty = 1)
+```
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+Ensemble Model for all Continents
+
+```{r}
+ensemble_forecast_continents <- (africa_forecast$pred + asia_forecast$pred + northamer_forecast$pred + southamer_forecast$pred + europe_forecast$pred + oceania_forecast$pred) / 6
+
+plot(world_forecast$pred, type = "l", col = "red", ylim = range(c(ensemble_forecast_continents, world_forecast$pred)), 
+     xlab = "Time", ylab = "Forecasted Values", main = "Comparison of Forecasted Values")
+lines(ensemble_forecast_continents, col = "blue")
+
+legend("topright", legend = c("Ensemble Model", "World Model"), col = c("blue", "red"), lty = 1)
+
+```
+
+
+
+
+
