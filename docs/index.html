@@ -104,7 +104,7 @@
 								<p>For our supervised models, we used the clusters, worldwide, and geographical region data to make time series, ensemble, and RNN models for each of these. In total, we made 34 models across the different data groups and model methods.</p>
 								<h3>Time Series Models</h3>
 								<p>For our time series forecasting, we used ARMA(p,q) models to fit our data. After removing any trends, seasonality, or other temporal dependencies in the data we found that our data exhibits iid noise and stationary behavior, making it well suited for ARMA(p,q) models. The monthly data was very noisy, despite removing trends and seasonality, so we decided to not fit the monthly data to any models and instead used yearly data. ARMA models are commonly used in time series forecasting and provide unique insight on time series data because they create forecasts based on both lagged observations and the past error terms. They provide robust forecasting results that take temporal dependancies and short term flucations into account.</p>
-								<p>For each of the time series models we made, we followed these steps below to ensure we fit our models well.</p>
+								<p>For each of the time series models we made, we followed these steps below to ensure we fit our models well. With some of the steps are examples of some of the plots we used to validate our results.</p>
 								<ul>
 									<li>Remove temporal dependencies</li>
 									<li>Run analysis on residuals including viewing ACF, PACF, Normal Q-Q Plots, and Augmented Dickey-Fuller Test</li>
@@ -116,7 +116,14 @@
 									<li>Use ARMA(p,q) model just made to forecast next 5 or more years of temperature change</li>
 									<img src = "website_template/images/forecasting_ex.png" width = "550" height = "auto">
 								</ul>
-
+								<p>We followed this framework above when creating models for each of our data groups. At the end of this page is a summary of all of our models which contains the next year forecast and RMSE for each of the models we made.</p>
+								<h3>Ensemble Models</h3>
+								<p>We made ensemble models based on our time series and RNN models when it was appropraite. Our ensemble models were combinations of models with subgroups of the worlwide countries, which would thus be combined to create a model that could be compared to the model made with worldwide data. These ensemble models provide unique insight into worlwide temperature change predictions because they effectively weigh certain countries contributions to the temperature change based on different factors such as higher ecological footprint or geographical region.</p>
+								<p>In total, we made an ensemble model from our geographical region time series model, k-means cluster time series model, hierarchical cluster time series model, geographical region RNN model, k-means cluster RNN model, and hierarchical cluster RNN model.</p>
+								<p>We found that our ensemble models produced lower RMSE values when compared to their counterparts, indicating success in the models. Below are some examples of forecasting for ensemble models compared to their components. Note: for the clustering groups, the black line indicates the ensemble model forecast results.</p>
+								<img src="website_template/images/regional_group_ensemble.png" width="550" height="auto">
+								<img src="website_template/images/k_mean_cluster_ensemble.png" width="550" height="auto">
+								<img src="website_template/images/hierarchical_ensemble.png" width="550" height="auto">
 							</article>
 
 						<!-- Reports -->
