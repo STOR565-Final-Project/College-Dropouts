@@ -65,7 +65,7 @@
 
 						<!-- Work -->
 							<article id="work">
-								<h2 class="major">Analysis</h2>
+								<h2 class="major"> EDA</h2>
 								<p>In our early data exploration, we focused on visualizing both datasets to determine how to best move forward in model creation.</p>
 								<h3>FAOSTAT EDA:</h3>
 								<p>Looking at the FAOSTAT dataset, we visualized the data in numerous ways including simply ploting temperature change by month and year to gauge trends, and by checking for correlation between months and temperature change to see if there were certain months that might contribute more to our models. Below are two plots from this analysis.</p>
@@ -101,7 +101,10 @@
 						<!-- About -->
 							<article id="about">
 								<h2 class="major">Models</h2>
-								<p>Results content goes here.</p>
+								<p>For our supervised models, we used the clusters, worldwide, and geographical region data to make time series, ensemble, and RNN models for each of these. In total, we made 34 models across the different data groups and model methods.</p>
+								<h3>Time Series Models</h3>
+								<p>For our time series forecasting, we used ARMA(p,q) models to fit our data. After removing any trends, seasonality, or other temporal dependencies in the data we found that our data exhibits iid noise and stationary behavior, making it well suited for ARMA(p,q) models. ARMA models are commonly used in time series forecasting and provide unique insight on time series data because they create forecasts based on both lagged observations and the past error terms. They provide robust forecasting results that take temporal dependancies and short term flucations into account.</p>
+							
 							</article>
 
 						<!-- Reports -->
