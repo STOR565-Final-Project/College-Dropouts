@@ -124,6 +124,13 @@
 								<img src="website_template/images/regional_group_ensemble.png" width="550" height="auto">
 								<img src="website_template/images/k_mean_cluster_ensemble.png" width="550" height="auto">
 								<img src="website_template/images/hierarchical_ensemble.png" width="550" height="auto">
+								<h3>Recurrent Neural Networks</h3>
+								<p>We decided to create RNN models in addition to our time series models since they are useful for detecting overall trends in noisy data and predicting locations of future spikes. In our RNN models, we use various layers including: Long Short-Term Memory (LSTM) to capture long-term dependencies in sequential data, Dropout to randomly selects neurons for deletion to prevent overfitting, bidirectional to analyze sequential data forwards and backwards to detect more patterns, and dense layers  to fully connect the layers and to detect complex patterns.</p>
+								<p>Our naive attempt used just one LSTM layer and one Dense layer, a RELU activation function for nonlinearity, and 10 epochs. Seen below, it produced inadequate results</p>
+								<img src="website_template/images/naive_rnn.png" width="550" height="auto">
+								<p>Following this naive model, we improved our model which included 1 bidirectional layer, 3 LSTM layers, 3 dropout Layers, and 2 dense layers. We used a different loss function here as well. Below is our improved model on the worldwide data group.</p>
+								<img src="website_template/images/improved_rnn.png" width="550" height="auto">
+								<h3>Model Results</h3>
 							</article>
 
 						<!-- Reports -->
