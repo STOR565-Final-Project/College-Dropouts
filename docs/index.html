@@ -103,8 +103,20 @@
 								<h2 class="major">Models</h2>
 								<p>For our supervised models, we used the clusters, worldwide, and geographical region data to make time series, ensemble, and RNN models for each of these. In total, we made 34 models across the different data groups and model methods.</p>
 								<h3>Time Series Models</h3>
-								<p>For our time series forecasting, we used ARMA(p,q) models to fit our data. After removing any trends, seasonality, or other temporal dependencies in the data we found that our data exhibits iid noise and stationary behavior, making it well suited for ARMA(p,q) models. ARMA models are commonly used in time series forecasting and provide unique insight on time series data because they create forecasts based on both lagged observations and the past error terms. They provide robust forecasting results that take temporal dependancies and short term flucations into account.</p>
-							
+								<p>For our time series forecasting, we used ARMA(p,q) models to fit our data. After removing any trends, seasonality, or other temporal dependencies in the data we found that our data exhibits iid noise and stationary behavior, making it well suited for ARMA(p,q) models. The monthly data was very noisy, despite removing trends and seasonality, so we decided to not fit the monthly data to any models and instead used yearly data. ARMA models are commonly used in time series forecasting and provide unique insight on time series data because they create forecasts based on both lagged observations and the past error terms. They provide robust forecasting results that take temporal dependancies and short term flucations into account.</p>
+								<p>For each of the time series models we made, we followed these steps below to ensure we fit our models well.</p>
+								<ul>
+									<li>Remove temporal dependencies</li>
+									<li>Run analysis on residuals including viewing ACF, PACF, Normal Q-Q Plots, and Augmented Dickey-Fuller Test</li>
+									<img src = "website_template/images/resid_analysis_ex.png" width = "400" height = "auto">
+									<li>Set aside last 5 years of data for testing and train a model to rest of data, minimizing AIC value and RMSE, and checking how the data vs. model ACF plots compare</li>
+									<img src = "website_template/images/training vs testing ex.png" width = "300" height = "auto">
+									<img src = "website_template/images/ACF_model_vs_data.png" width = "400" height = "auto">
+									<li>Check once more that residuals after model fitting exhibit iid noise behavior</li>
+									<li>Use ARMA(p,q) model just made to forecast next 5 or more years of temperature change</li>
+									<img src = "website_template/images/forecasting_ex.png" width = "550" height = "auto">
+								</ul>
+
 							</article>
 
 						<!-- Reports -->
