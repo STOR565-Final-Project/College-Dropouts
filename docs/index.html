@@ -101,7 +101,7 @@
 						<!-- About -->
 							<article id="models">
 								<h2 class="major">Models</h2>
-								<p>For our supervised models, we used the clusters, worldwide, and geographical region data to make time series, ensemble, and RNN models for each of these. In total, we made 34 models across the different data groups and model methods.</p>
+								<p>For our supervised models, we used the clusters from the NFA dataset to form groups in our FAOSTAT dataset, along with worldwide, and geographical region data from the FAOSTAT dataset to make time series, ensemble, and RNN models for each of these. In total, we made 34 models across the different data groups and model methods.</p>
 								<h3>Time Series Models</h3>
 								<p>For our time series forecasting, we used ARMA(p,q) models to fit our data. After removing any trends, seasonality, or other temporal dependencies in the data we found that our data exhibits iid noise and stationary behavior, making it well suited for ARMA(p,q) models. The monthly data was very noisy, despite removing trends and seasonality, so we decided to not fit the monthly data to any models and instead used yearly data. ARMA models are commonly used in time series forecasting and provide unique insight on time series data because they create forecasts based on both lagged observations and the past error terms. They provide robust forecasting results that take temporal dependancies and short term flucations into account.</p>
 								<p>For each of the time series models we made, we followed these steps below to ensure we fit our models well. With some of the steps are examples of some of the plots we used to validate our results.</p>
